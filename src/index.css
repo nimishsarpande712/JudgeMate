@@ -1,129 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
-
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
-
-@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap");
-
-@import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
-
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
+    --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 0 0% 0%;
+    --primary: 262 83% 58%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 0%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 0 0% 90%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 220 14% 96%;
+    --accent-foreground: 222 47% 11%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 0%;
-    --input: 0 0% 0%;
-    --ring: 0 0% 0%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 262 83% 58%;
 
-    --radius: 0rem;
+    --radius: 0.75rem;
 
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --chart-1: 262 83% 58%;
+    --chart-2: 217 91% 60%;
+    --chart-3: 142 76% 36%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 0 84% 60%;
 
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 0%;
-    --sidebar-primary: 0 0% 0%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 262 83% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 90%;
-    --sidebar-accent-foreground: 0 0% 0%;
-    --sidebar-border: 0 0% 0%;
-    --sidebar-ring: 0 0% 0%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 262 83% 58%;
     --sidebar: 0 0% 98%;
-    --font-sans: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-    --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-    --font-mono: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-    --shadow-2xs: 1px 1px 0px 0px #000000;
-    --shadow-xs: 2px 2px 0px 0px #000000;
-    --shadow-sm: 3px 3px 0px 0px #000000;
-    --shadow: 5px 5px 0px 0px #000000;
-    --shadow-md: 8px 8px 0px 0px #000000;
-    --shadow-lg: 12px 12px 0px 0px #000000;
-    --shadow-xl: 16px 16px 0px 0px #000000;
-    --shadow-2xl: 24px 24px 0px 0px #000000;
-    --tracking-normal: 0em;
-    --spacing: 0.25rem;
   }
 
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
+    --background: 224 71% 4%;
+    --foreground: 210 20% 98%;
 
-    --card: 0 0% 0%;
-    --card-foreground: 0 0% 100%;
+    --card: 224 71% 4%;
+    --card-foreground: 210 20% 98%;
 
-    --popover: 0 0% 0%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 210 20% 98%;
 
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
+    --primary: 263 70% 50%;
+    --primary-foreground: 210 20% 98%;
 
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 210 20% 98%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 217 10% 64%;
 
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 215 28% 17%;
+    --accent-foreground: 210 20% 98%;
 
     --destructive: 0 62% 30%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 210 20% 98%;
 
-    --border: 0 0% 100%;
-    --input: 0 0% 100%;
-    --ring: 0 0% 100%;
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 263 70% 50%;
 
-    --sidebar-background: 225 25% 8%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 0 0% 100%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 0 0% 100%;
-    --sidebar-ring: 0 0% 100%;
+    --sidebar-background: 224 71% 4%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 263 70% 50%;
+    --sidebar-primary-foreground: 210 20% 98%;
+    --sidebar-accent: 215 28% 17%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 215 28% 17%;
+    --sidebar-ring: 263 70% 50%;
+    --sidebar: 224 71% 4%;
+
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --sidebar: 0 0% 5%;
-    --radius: 0rem;
-    --shadow-2xs: 1px 1px 0px 0px #ffffff;
-    --shadow-xs: 2px 2px 0px 0px #ffffff;
-    --shadow-sm: 3px 3px 0px 0px #ffffff;
-    --shadow: 5px 5px 0px 0px #ffffff;
-    --shadow-md: 8px 8px 0px 0px #ffffff;
-    --shadow-lg: 12px 12px 0px 0px #ffffff;
-    --shadow-xl: 16px 16px 0px 0px #ffffff;
-    --shadow-2xl: 24px 24px 0px 0px #ffffff;
   }
 }
 
@@ -133,11 +106,355 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
-    font-family: 'Inter', sans-serif;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
   }
+}
+
+/* Custom animations */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out forwards;
+}
+
+/* Glassmorphism utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+:root:not(.dark) .glass {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+:root:not(.dark) .glass-card {
+  background: rgba(0, 0, 0, 0.01);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom scrollbar */
+.dark ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.3);
+  border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.5);
+}
+
+:root:not(.dark) ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+:root:not(.dark) ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+:root:not(.dark) ::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.2);
+  border-radius: 3px;
+}
+
+:root:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.4);
+}
+
+/* Slider custom styles */
+[data-orientation="horizontal"] [data-role="track"] {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-orientation="horizontal"] [data-role="range"] {
+  background: linear-gradient(90deg, #a855f7, #3b82f6) !important;
+}
+
+[data-orientation="horizontal"] [data-role="thumb"] {
+  border-color: #a855f7 !important;
+  background: white !important;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   LIGHT MODE THEME OVERRIDES
+   All components use hardcoded dark classes (text-white, bg-white/5, 
+   text-slate-400, from-slate-950, etc). These CSS overrides make 
+   them adapt when .dark is removed from <html>.
+   ──────────────────────────────────────────────────────────────── */
+
+/* ── Page background gradients ── */
+:root:not(.dark) .from-slate-950 {
+  --tw-gradient-from: #f8fafc !important; /* slate-50 */
+}
+:root:not(.dark) .via-purple-950 {
+  --tw-gradient-via: #faf5ff !important; /* purple-50 */
+}
+:root:not(.dark) .via-purple-950\/50 {
+  --tw-gradient-via: rgba(250, 245, 255, 0.5) !important;
+}
+:root:not(.dark) .to-slate-950 {
+  --tw-gradient-to: #f8fafc !important; /* slate-50 */
+}
+
+/* ── Text colors ── */
+:root:not(.dark) .text-white {
+  color: #0f172a !important; /* slate-900 */
+}
+:root:not(.dark) .text-slate-300 {
+  color: #334155 !important; /* slate-700 */
+}
+:root:not(.dark) .text-slate-400 {
+  color: #475569 !important; /* slate-600 */
+}
+:root:not(.dark) .text-slate-500 {
+  color: #64748b !important; /* slate-500 (stays) */
+}
+:root:not(.dark) .text-slate-600 {
+  color: #94a3b8 !important; /* slate-400 */
+}
+
+/* ── Background overlays with white ── */
+:root:not(.dark) .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.02) !important;
+}
+:root:not(.dark) .bg-white\/\[0\.02\] {
+  background-color: rgba(0, 0, 0, 0.01) !important;
+}
+:root:not(.dark) .bg-white\/\[0\.03\] {
+  background-color: rgba(0, 0, 0, 0.015) !important;
+}
+:root:not(.dark) .bg-white\/\[0\.04\] {
+  background-color: rgba(0, 0, 0, 0.02) !important;
+}
+:root:not(.dark) .bg-white\/\[0\.07\] {
+  background-color: rgba(0, 0, 0, 0.035) !important;
+}
+:root:not(.dark) .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+:root:not(.dark) .bg-white\/20 {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+:root:not(.dark) .hover\:bg-white\/5:hover {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+:root:not(.dark) .hover\:bg-white\/10:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+:root:not(.dark) .hover\:bg-white\/\[0\.07\]:hover {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+/* ── Border overlays with white ── */
+:root:not(.dark) .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+:root:not(.dark) .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+:root:not(.dark) .border-white\/20 {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+:root:not(.dark) .hover\:border-white\/20:hover {
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ── Slate backgrounds ── */
+:root:not(.dark) .bg-slate-800 {
+  background-color: #f1f5f9 !important; /* slate-100 */
+}
+:root:not(.dark) .bg-slate-900 {
+  background-color: #f8fafc !important; /* slate-50 */
+}
+:root:not(.dark) .bg-slate-900\/50 {
+  background-color: rgba(248, 250, 252, 0.8) !important;
+}
+:root:not(.dark) .bg-slate-950 {
+  background-color: #ffffff !important;
+}
+
+/* ── Hover text colors ── */
+:root:not(.dark) .hover\:text-white:hover {
+  color: #0f172a !important;
+}
+
+/* ── Placeholder colors ── */
+:root:not(.dark) .placeholder\:text-slate-500::placeholder {
+  color: #94a3b8 !important;
+}
+:root:not(.dark) .placeholder\:text-slate-600::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* ── Input styling in light mode ── */
+:root:not(.dark) input.bg-white\/5,
+:root:not(.dark) textarea.bg-white\/5,
+:root:not(.dark) .bg-white\/5 input,
+:root:not(.dark) .bg-white\/5 textarea {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* ── Card-like surfaces ── */
+:root:not(.dark) .backdrop-blur-xl {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(20px);
+}
+:root:not(.dark) .backdrop-blur-md {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(12px);
+}
+
+/* ── Shadow adjustments ── */
+:root:not(.dark) .shadow-purple-500\/25 {
+  --tw-shadow-color: rgba(168, 85, 247, 0.12) !important;
+}
+:root:not(.dark) .shadow-purple-500\/10 {
+  --tw-shadow-color: rgba(168, 85, 247, 0.06) !important;
+}
+
+/* ── Tooltip in light mode ── */
+:root:not(.dark) [data-radix-popper-content-wrapper] .bg-slate-800 {
+  background-color: #1e293b !important; /* keep tooltip dark */
+  color: #f8fafc !important;
+}
+
+/* ── Select dropdown ── */
+:root:not(.dark) [data-radix-popper-content-wrapper] .bg-slate-900 {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+:root:not(.dark) [data-radix-select-viewport] .text-white {
+  color: #0f172a !important;
+}
+:root:not(.dark) [data-radix-select-viewport] .hover\:bg-white\/10:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* ── Specific colored accents (keep in both themes) ── */
+:root:not(.dark) .text-purple-300 {
+  color: #7c3aed !important; /* purple-600 — stronger in light */
+}
+:root:not(.dark) .text-purple-400 {
+  color: #7c3aed !important;
+}
+:root:not(.dark) .text-blue-300 {
+  color: #2563eb !important;
+}
+:root:not(.dark) .text-blue-400 {
+  color: #2563eb !important;
+}
+
+/* ── Popover / notification panels ── */
+:root:not(.dark) [data-radix-popper-content-wrapper] {
+  --tw-shadow: 0 10px 25px -5px rgba(0,0,0,0.1) !important;
+}
+
+/* ── Index page (already light but needs dark mode support) ── */
+.dark .bg-\[\#f3f8dd\] {
+  background-color: #0f172a !important; /* slate-900 */
+}
+.dark .bg-\[\#bde7fa\] {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* ── Podium highlights in rankings ── */
+:root:not(.dark) .bg-yellow-500\/5 {
+  background-color: rgba(234, 179, 8, 0.08) !important;
+}
+:root:not(.dark) .bg-slate-500\/5 {
+  background-color: rgba(100, 116, 139, 0.06) !important;
+}
+:root:not(.dark) .bg-amber-500\/5 {
+  background-color: rgba(245, 158, 11, 0.08) !important;
+}
+
+/* ── Status badge backgrounds ── */
+:root:not(.dark) .bg-purple-500\/20 {
+  background-color: rgba(168, 85, 247, 0.1) !important;
+}
+:root:not(.dark) .bg-purple-500\/10 {
+  background-color: rgba(168, 85, 247, 0.06) !important;
+}
+:root:not(.dark) .bg-purple-500\/5 {
+  background-color: rgba(168, 85, 247, 0.04) !important;
+}
+:root:not(.dark) .bg-blue-500\/20 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+:root:not(.dark) .bg-blue-500\/10 {
+  background-color: rgba(59, 130, 246, 0.06) !important;
+}
+
+/* ── Score verdict cards ── */
+:root:not(.dark) .bg-green-500\/10 {
+  background-color: rgba(34, 197, 94, 0.08) !important;
+}
+:root:not(.dark) .bg-red-500\/10 {
+  background-color: rgba(239, 68, 68, 0.06) !important;
+}
+:root:not(.dark) .bg-yellow-500\/10 {
+  background-color: rgba(234, 179, 8, 0.06) !important;
+}
+:root:not(.dark) .bg-orange-500\/10 {
+  background-color: rgba(249, 115, 22, 0.06) !important;
+}
+
+/* ── Progress bar track ── */
+:root:not(.dark) .bg-white\/5.h-2,
+:root:not(.dark) .bg-white\/5.h-1\.5 {
+  background-color: #e2e8f0 !important;
+}
+
+/* ── ThemeToggle button in light mode ── */
+:root:not(.dark) .text-slate-400.hover\:text-white:hover {
+  color: #0f172a !important;
 }
