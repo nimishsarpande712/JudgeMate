@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalAuth } from "@/hooks/useLocalAuth";
 import { Button } from "@/components/ui/button";
@@ -18,10 +18,12 @@ export default function AuthPage() {
   const { signIn, signUp, user } = useLocalAuth();
   const navigate = useNavigate();
 
-  if (user) {
-    navigate(user.role === "student" ? "/submit" : "/judge");
-    return null;
-  }
+  // Navigate after user state updates (not during render)
+  useEffect(() => {
+    if (user) {
+      navigate(user.role === "student" ? "/submit" : "/judge", { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

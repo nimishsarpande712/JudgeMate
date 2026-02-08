@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { useLocalAuth } from "@/hooks/useLocalAuth";
 import { useProjects } from "@/hooks/useProjects";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -19,6 +19,7 @@ import {
   Sparkles, Globe, X, Plus
 } from "lucide-react";
 import { DOMAINS, type Domain, type Project } from "@/types";
+import AIMentorshipPanel from "@/components/AIMentorshipPanel";
 
 export default function ProjectSubmission() {
   const { user, signOut } = useLocalAuth();
@@ -75,12 +76,20 @@ export default function ProjectSubmission() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) {
+      toast({ title: "Not authenticated", description: "Please sign in first.", variant: "destructive" });
+      return;
+    }
     if (!teamName.trim() || !projectName.trim() || !description.trim()) {
       toast({ title: "Missing fields", description: "Team name, project name, and description are required.", variant: "destructive" });
       return;
     }
     if (description.length > 500) {
       toast({ title: "Description too long", description: "Max 500 characters.", variant: "destructive" });
+      return;
+    }
+    if (githubUrl.trim() && !/^https:\/\/github\.com\/[\w.-]+\/[\w.-]+/i.test(githubUrl.trim())) {
+      toast({ title: "Invalid GitHub URL", description: "Please enter a valid GitHub repository URL (https://github.com/owner/repo).", variant: "destructive" });
       return;
     }
     if (existingProject) {
@@ -115,7 +124,7 @@ export default function ProjectSubmission() {
       pptFileName,
       pptFileType,
       submissionTime: new Date().toISOString(),
-      submittedBy: user!.id,
+      submittedBy: user.id,
       judgeScores: {},
       recommendations: [],
       plagiarismScore: plagiarismResult.overallScore,
@@ -137,42 +146,49 @@ export default function ProjectSubmission() {
   };
 
   if (!user) {
-    navigate("/auth");
-    return null;
+    return <Navigate to="/auth" replace />;
   }
 
   if (existingProject || submitted) {
     const proj = existingProject || projects.find((p) => p.submittedBy === user.id);
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 flex items-center justify-center p-4">
-        <Card className="w-full max-w-lg border-white/10 bg-white/5 backdrop-blur-xl">
-          <CardContent className="pt-8 text-center space-y-4">
-            <div className="mx-auto w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
-              <CheckCircle2 className="h-8 w-8 text-green-400" />
-            </div>
-            <h2 className="text-2xl font-bold text-white">Submission Received!</h2>
-            <p className="text-slate-400">Your project is now visible to judges.</p>
-            {proj && (
-              <div className="text-left space-y-2 p-4 rounded-xl bg-white/5 border border-white/10">
-                <p className="text-sm text-slate-300"><strong className="text-white">Team:</strong> {proj.teamName}</p>
-                <p className="text-sm text-slate-300"><strong className="text-white">Project:</strong> {proj.projectName}</p>
-                <p className="text-sm text-slate-300"><strong className="text-white">Domain:</strong> {proj.domain}</p>
-                {proj.pptFileName && (
-                  <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30">
-                    <FileText className="h-3 w-3 mr-1" /> {proj.pptFileName}
-                  </Badge>
-                )}
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 py-8 px-4">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
+            <CardContent className="pt-8 text-center space-y-4">
+              <div className="mx-auto w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
+                <CheckCircle2 className="h-8 w-8 text-green-400" />
               </div>
-            )}
-            <Button
-              onClick={signOut}
-              variant="outline"
-              className="border-white/10 text-slate-300 hover:bg-white/5"
-            >
-              <LogOut className="h-4 w-4 mr-2" /> Sign Out
-            </Button>
-          </CardContent>
-        </Card>
+              <h2 className="text-2xl font-bold text-white">Submission Received!</h2>
+              <p className="text-slate-400">Your project is now visible to judges.</p>
+              {proj && (
+                <div className="text-left space-y-2 p-4 rounded-xl bg-white/5 border border-white/10">
+                  <p className="text-sm text-slate-300"><strong className="text-white">Team:</strong> {proj.teamName}</p>
+                  <p className="text-sm text-slate-300"><strong className="text-white">Project:</strong> {proj.projectName}</p>
+                  <p className="text-sm text-slate-300"><strong className="text-white">Domain:</strong> {proj.domain}</p>
+                  {proj.aiScores && (
+                    <p className="text-sm text-slate-300"><strong className="text-white">AI Score:</strong> {proj.aiScores.weightedTotal.toFixed(1)}/10</p>
+                  )}
+                  {proj.pptFileName && (
+                    <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30">
+                      <FileText className="h-3 w-3 mr-1" /> {proj.pptFileName}
+                    </Badge>
+                  )}
+                </div>
+              )}
+              <Button
+                onClick={signOut}
+                variant="outline"
+                className="border-white/10 text-slate-300 hover:bg-white/5"
+              >
+                <LogOut className="h-4 w-4 mr-2" /> Sign Out
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* AI Mentorship Panel — student can get improvement tips */}
+          {proj && <AIMentorshipPanel project={proj} />}
+        </div>
       </div>
     );
   }

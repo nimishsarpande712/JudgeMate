@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LocalAuthProvider, useLocalAuth } from "@/hooks/useLocalAuth";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import Landing from "./pages/Landing";
 import StudentLogin from "@/components/StudentLogin";
 import ProjectSubmission from "@/components/ProjectSubmission";
@@ -53,27 +54,29 @@ function DarkModeInit() {
 }
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <LocalAuthProvider>
-        <DarkModeInit />
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/auth" element={<StudentLogin />} />
-            <Route path="/submit" element={<ProtectedStudentRoute><ProjectSubmission /></ProtectedStudentRoute>} />
-            <Route path="/judge" element={<ProtectedJudgeRoute><JudgeDashboard /></ProtectedJudgeRoute>} />
-            {/* Legacy routes redirect */}
-            <Route path="/dashboard" element={<Navigate to="/judge" replace />} />
-            <Route path="/demo" element={<Navigate to="/" replace />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </LocalAuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <LocalAuthProvider>
+          <DarkModeInit />
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/auth" element={<StudentLogin />} />
+              <Route path="/submit" element={<ProtectedStudentRoute><ProjectSubmission /></ProtectedStudentRoute>} />
+              <Route path="/judge" element={<ProtectedJudgeRoute><JudgeDashboard /></ProtectedJudgeRoute>} />
+              {/* Legacy routes redirect */}
+              <Route path="/dashboard" element={<Navigate to="/judge" replace />} />
+              <Route path="/demo" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </LocalAuthProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;

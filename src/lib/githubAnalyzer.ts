@@ -330,12 +330,15 @@ export async function analyzeGitHubRepo(githubUrl: string): Promise<GitHubAnalys
   const baseUrl = `https://api.github.com/repos/${owner}/${repo}`;
 
   try {
-    // Fetch repo info, commits, languages, and tree in parallel
-    const [repoInfo, commitsRaw, languages, treeData] = await Promise.all([
-      fetchJSON(baseUrl),
+    // Fetch repo info first to get the default branch
+    const repoInfo = await fetchJSON(baseUrl);
+    const defaultBranch = repoInfo?.default_branch || "main";
+
+    // Fetch commits, languages, and tree in parallel using the actual default branch
+    const [commitsRaw, languages, treeData] = await Promise.all([
       fetchJSON(`${baseUrl}/commits?per_page=100`).catch(() => []),
       fetchJSON(`${baseUrl}/languages`).catch(() => ({})),
-      fetchJSON(`${baseUrl}/git/trees/${encodeURIComponent("HEAD")}?recursive=1`).catch(() => ({ tree: [] })),
+      fetchJSON(`${baseUrl}/git/trees/${encodeURIComponent(defaultBranch)}?recursive=1`).catch(() => ({ tree: [] })),
     ]);
 
     // Analyze commits

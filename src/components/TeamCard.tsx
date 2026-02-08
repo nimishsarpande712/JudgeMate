@@ -9,6 +9,7 @@ import { CRITERIA, type CriterionKey } from "@/lib/scoring";
 import { toast } from "@/hooks/use-toast";
 import { Bot, GitBranch, Loader2, Pencil, Save } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
+import { scoreWithGroq } from "@/lib/groqScoring";
 
 interface Props {
   team: Tables<"teams">;
@@ -28,16 +29,12 @@ export default function TeamCard({ team, score, onScoreUpdate }: Props) {
   const handleAiScore = async () => {
     setAiLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("score-team", {
-        body: {
-          team_id: team.id,
-          github_url: team.github_url,
-          description: team.description,
-          project_name: team.project_name,
-          domain: team.domain,
-        },
+      const data = await scoreWithGroq({
+        github_url: team.github_url || undefined,
+        description: team.description || undefined,
+        project_name: team.project_name || undefined,
+        domain: team.domain || undefined,
       });
-      if (error) throw error;
       if (data?.scores) {
         setLocalScores(data.scores);
         // Save AI scores

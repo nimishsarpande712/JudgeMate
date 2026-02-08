@@ -1,13 +1,11 @@
-// Deno edge function — runs in Supabase's Deno runtime, not in the Node.js/Vite build.
+/**
+ * xAI (Grok) Scoring — routes through backend proxy when available,
+ * falls back to direct client-side API call.
+ */
 
-/* Deno type declarations for VS Code TS server (no Deno extension needed) */
-declare const Deno: { env: { get(key: string): string | undefined } };
-declare function serve(handler: (req: Request) => Promise<Response> | Response): void;
+import { scoreViaBackend } from "@/lib/apiClient";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+const XAI_API_KEY = import.meta.env.VITE_XAI_API_KEY;
 
 const CRITERIA_WEIGHTS: Record<string, number> = {
   innovation: 0.30,
@@ -51,11 +49,11 @@ async function fetchGitHubStats(url: string): Promise<GitHubStats | null> {
     ]);
 
     if (!repoRes.ok) return null;
-    const repoData = (await repoRes.json()) as Record<string, unknown>;
+    const repoData = await repoRes.json();
 
     let contributors = 0;
     if (contribRes.ok) {
-      const contribData: unknown = await contribRes.json();
+      const contribData = await contribRes.json();
       contributors = Array.isArray(contribData) ? contribData.length : 0;
     }
 
@@ -76,14 +74,14 @@ async function fetchGitHubStats(url: string): Promise<GitHubStats | null> {
     const languages = langRes.ok ? Object.keys(await langRes.json()) : [];
 
     return {
-      stars: (repoData.stargazers_count as number) || 0,
-      forks: (repoData.forks_count as number) || 0,
-      open_issues: (repoData.open_issues_count as number) || 0,
-      language: (repoData.language as string | null) ?? null,
+      stars: repoData.stargazers_count || 0,
+      forks: repoData.forks_count || 0,
+      open_issues: repoData.open_issues_count || 0,
+      language: repoData.language,
       languages,
       commits,
       contributors,
-      description: (repoData.description as string | null) ?? null,
+      description: repoData.description,
     };
   } catch (e) {
     console.error("GitHub fetch error:", e);
@@ -91,7 +89,10 @@ async function fetchGitHubStats(url: string): Promise<GitHubStats | null> {
   }
 }
 
-function fallbackScoring(github: GitHubStats | null, description: string): { scores: Record<string, number>; explanations: Record<string, string> } {
+function fallbackScoring(
+  github: GitHubStats | null,
+  description: string
+): { scores: Record<string, number>; explanations: Record<string, string> } {
   const scores: Record<string, number> = {};
   const explanations: Record<string, string> = {};
   const descLen = (description || "").length;
@@ -134,52 +135,77 @@ function fallbackScoring(github: GitHubStats | null, description: string): { sco
   return { scores, explanations };
 }
 
-serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+export interface GroqScoringResult {
+  scores: Record<string, number>;
+  explanations: Record<string, string>;
+  weighted_total: number;
+  github_stats: GitHubStats | null;
+}
 
-  try {
-    const { github_url, description, project_name, domain } = (await req.json()) as Record<string, string>;
-    console.log("Scoring request:", { github_url, project_name, domain });
+export async function scoreWithGroq(params: {
+  github_url?: string;
+  description?: string;
+  project_name?: string;
+  domain?: string;
+}): Promise<GroqScoringResult> {
+  const { github_url, description, project_name, domain } = params;
+  console.log("Grok scoring request:", { github_url, project_name, domain });
 
-    const github = github_url ? await fetchGitHubStats(github_url) : null;
-    console.log("GitHub stats:", github);
+  // Try backend proxy first (keeps API key secure)
+  const backendResult = await scoreViaBackend(params);
+  if (backendResult) {
+    console.log("Scored via backend proxy");
+    return {
+      scores: backendResult.scores,
+      explanations: backendResult.explanations,
+      weighted_total: backendResult.weighted_total,
+      github_stats: (backendResult.github_stats as unknown) as GitHubStats | null,
+    };
+  }
 
-    const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
+  // Fallback: direct client-side scoring
+  const github = github_url ? await fetchGitHubStats(github_url) : null;
+  console.log("GitHub stats:", github);
 
-    let scores: Record<string, number>;
-    let explanations: Record<string, string>;
+  let scores: Record<string, number>;
+  let explanations: Record<string, string>;
 
-    if (GROQ_API_KEY) {
-      try {
-        const prompt = `You are an expert hackathon judge. Score this project 1-10 on each criterion based on the data provided.
+  if (XAI_API_KEY) {
+    try {
+      const prompt = `You are an expert hackathon judge. Score this project 1-10 on each criterion based on the data provided.
 
 Project: ${project_name || "Unknown"}
 Domain: ${domain || "General"}
 Description: ${description || "No description provided"}
-${github ? `
+${
+  github
+    ? `
 GitHub Stats:
 - Stars: ${github.stars}, Forks: ${github.forks}
 - Contributors: ${github.contributors}, Commits: ~${github.commits}
 - Languages: ${github.languages.join(", ")}
 - Open Issues: ${github.open_issues}
 - Repo Description: ${github.description || "None"}
-` : "No GitHub data available."}
+`
+    : "No GitHub data available."
+}
 
 Score each criterion 1-10 with a brief explanation.`;
 
-        const aiResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${GROQ_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "llama-3.3-70b-versatile",
-            messages: [
-              { role: "system", content: "You are a hackathon judging AI. Return scores and explanations." },
-              { role: "user", content: prompt },
-            ],
-            tools: [{
+      const aiResponse = await fetch("https://api.x.ai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${XAI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "grok-4-latest",
+          messages: [
+            { role: "system", content: "You are a hackathon judging AI. Return scores and explanations." },
+            { role: "user", content: prompt },
+          ],
+          tools: [
+            {
               type: "function",
               function: {
                 name: "submit_scores",
@@ -204,64 +230,56 @@ Score each criterion 1-10 with a brief explanation.`;
                     originality: { type: "number", description: "Originality score 1-10" },
                     originality_explanation: { type: "string" },
                   },
-                  required: ["innovation", "technical_feasibility", "impact", "mvp_completeness", "presentation", "tech_stack", "team_collaboration", "originality"],
+                  required: [
+                    "innovation", "technical_feasibility", "impact", "mvp_completeness",
+                    "presentation", "tech_stack", "team_collaboration", "originality",
+                  ],
                   additionalProperties: false,
                 },
               },
-            }],
-            tool_choice: { type: "function", function: { name: "submit_scores" } },
-          }),
-        });
+            },
+          ],
+          tool_choice: { type: "function", function: { name: "submit_scores" } },
+        }),
+      });
 
-        if (!aiResponse.ok) {
-          const errText = await aiResponse.text();
-          console.error("AI API error:", aiResponse.status, errText);
-          if (aiResponse.status === 429 || aiResponse.status === 402) {
-            throw new Error(aiResponse.status === 429 ? "Rate limited" : "Payment required");
-          }
-          throw new Error("AI API error");
-        }
-
-        const aiData = await aiResponse.json() as {
-          choices?: Array<{ message?: { tool_calls?: Array<{ function: { arguments: string } }> } }>;
-        };
-        const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
-        if (!toolCall) throw new Error("No tool call in AI response");
-
-        const parsed = JSON.parse(toolCall.function.arguments);
-        scores = {};
-        explanations = {};
-        for (const key of Object.keys(CRITERIA_WEIGHTS)) {
-          scores[key] = Math.max(1, Math.min(10, Math.round(parsed[key] || 5)));
-          explanations[key] = parsed[`${key}_explanation`] || "";
-        }
-        console.log("AI scores:", scores);
-      } catch (aiErr) {
-        console.error("AI fallback triggered:", aiErr);
-        const fb = fallbackScoring(github, description || "");
-        scores = fb.scores;
-        explanations = fb.explanations;
-        explanations._fallback = "Groq AI unavailable, used rule-based scoring";
+      if (!aiResponse.ok) {
+        const errText = await aiResponse.text();
+        console.error("Grok API error:", aiResponse.status, errText);
+        throw new Error(`Grok API error: ${aiResponse.status}`);
       }
-    } else {
+
+      const aiData = await aiResponse.json();
+      const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
+      if (!toolCall) throw new Error("No tool call in Grok response");
+
+      const parsed = JSON.parse(toolCall.function.arguments);
+      scores = {};
+      explanations = {};
+      for (const key of Object.keys(CRITERIA_WEIGHTS)) {
+        scores[key] = Math.max(1, Math.min(10, Math.round(parsed[key] || 5)));
+        explanations[key] = parsed[`${key}_explanation`] || "";
+      }
+      console.log("Grok AI scores:", scores);
+    } catch (aiErr) {
+      console.error("Grok fallback triggered:", aiErr);
       const fb = fallbackScoring(github, description || "");
       scores = fb.scores;
       explanations = fb.explanations;
-      explanations._note = "Rule-based scoring (no Groq API key)";
+      explanations._fallback = "Grok AI unavailable, used rule-based scoring";
     }
-
-    const weighted_total = Object.entries(CRITERIA_WEIGHTS).reduce(
-      (sum, [key, weight]) => sum + (scores[key] || 0) * weight, 0
-    );
-
-    return new Response(JSON.stringify({ scores, explanations, weighted_total, github_stats: github }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  } catch (e) {
-    console.error("score-team error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+  } else {
+    console.warn("No VITE_XAI_API_KEY found, using fallback scoring");
+    const fb = fallbackScoring(github, description || "");
+    scores = fb.scores;
+    explanations = fb.explanations;
+    explanations._note = "Rule-based scoring (no Grok API key configured)";
   }
-});
+
+  const weighted_total = Object.entries(CRITERIA_WEIGHTS).reduce(
+    (sum, [key, weight]) => sum + (scores[key] || 0) * weight,
+    0
+  );
+
+  return { scores, explanations, weighted_total, github_stats: github };
+}

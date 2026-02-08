@@ -52,45 +52,50 @@ export default function JudgeTeamCard({ project }: JudgeTeamCardProps) {
 
   const handleRescore = async () => {
     setRescoring(true);
+    try {
+      const updates: Partial<Project> = {};
 
-    const updates: Partial<Project> = {};
-
-    // 1. Re-fetch GitHub repo data
-    if (project.githubUrl?.trim()) {
-      toast({ title: "Fetching GitHub repo... 🔍", description: "Analyzing commits, structure, languages." });
-      try {
-        const ghData = await analyzeGitHubRepo(project.githubUrl.trim());
-        updates.githubAnalysis = ghData;
-      } catch {
-        // continue without GitHub data
+      // 1. Re-fetch GitHub repo data
+      if (project.githubUrl?.trim()) {
+        toast({ title: "Fetching GitHub repo... 🔍", description: "Analyzing commits, structure, languages." });
+        try {
+          const ghData = await analyzeGitHubRepo(project.githubUrl.trim());
+          updates.githubAnalysis = ghData;
+        } catch {
+          // continue without GitHub data
+        }
       }
+
+      // Build a temp project with updated GitHub data for plagiarism + scoring
+      const tempProject = { ...project, ...updates };
+
+      // 2. Re-run plagiarism with real GitHub data
+      const plagResult = analyzePlagiarism(
+        tempProject.githubUrl,
+        tempProject.description,
+        tempProject.projectName,
+        tempProject.githubAnalysis
+      );
+      updates.plagiarismScore = plagResult.overallScore;
+      updates.plagiarismDetails = plagResult;
+
+      // 3. Re-run AI scoring (now with githubAnalysis + updated plagiarism)
+      const scoringProject = { ...tempProject, plagiarismScore: plagResult.overallScore, plagiarismDetails: plagResult };
+      const newScores = scoreProjectWithAI(scoringProject);
+      updates.aiScores = newScores;
+
+      // 4. Save everything
+      updateProject(project.id, updates);
+      toast({
+        title: "Full Re-analysis Complete! 🤖",
+        description: `${project.teamName}: Score ${newScores.weightedTotal.toFixed(2)}/10 | Plagiarism ${plagResult.overallScore}%`,
+      });
+    } catch (err) {
+      console.error("Rescore failed:", err);
+      toast({ title: "Re-analysis failed", description: "An error occurred during scoring. Please try again.", variant: "destructive" });
+    } finally {
+      setRescoring(false);
     }
-
-    // Build a temp project with updated GitHub data for plagiarism + scoring
-    const tempProject = { ...project, ...updates };
-
-    // 2. Re-run plagiarism with real GitHub data
-    const plagResult = analyzePlagiarism(
-      tempProject.githubUrl,
-      tempProject.description,
-      tempProject.projectName,
-      tempProject.githubAnalysis
-    );
-    updates.plagiarismScore = plagResult.overallScore;
-    updates.plagiarismDetails = plagResult;
-
-    // 3. Re-run AI scoring (now with githubAnalysis + updated plagiarism)
-    const scoringProject = { ...tempProject, plagiarismScore: plagResult.overallScore, plagiarismDetails: plagResult };
-    const newScores = scoreProjectWithAI(scoringProject);
-    updates.aiScores = newScores;
-
-    // 4. Save everything
-    updateProject(project.id, updates);
-    setRescoring(false);
-    toast({
-      title: "Full Re-analysis Complete! 🤖",
-      description: `${project.teamName}: Score ${newScores.weightedTotal.toFixed(2)}/10 | Plagiarism ${plagResult.overallScore}%`,
-    });
   };
 
   const timeAgo = getTimeAgo(project.submissionTime);
@@ -318,6 +323,7 @@ export default function JudgeTeamCard({ project }: JudgeTeamCardProps) {
 function getTimeAgo(dateStr: string): string {
   const now = Date.now();
   const then = new Date(dateStr).getTime();
+  if (isNaN(then)) return "unknown";
   const diff = now - then;
   const mins = Math.floor(diff / 60000);
   if (mins < 1) return "just now";

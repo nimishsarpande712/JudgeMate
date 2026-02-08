@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { useLocalAuth } from "@/hooks/useLocalAuth";
 import { useProjects } from "@/hooks/useProjects";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -29,8 +29,7 @@ export default function JudgeDashboard() {
   const [showStats, setShowStats] = useState(true);
 
   if (!user || user.role !== "judge") {
-    navigate("/auth");
-    return null;
+    return <Navigate to="/auth" replace />;
   }
 
   const filteredProjects = projects.filter((p) => {
@@ -64,15 +63,20 @@ export default function JudgeDashboard() {
       }))
       .sort((a, b) => b.total - a.total);
 
+    const escCsv = (v: string | number) => {
+      const s = String(v);
+      return s.includes(",") || s.includes('"') || s.includes("\n") ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+
     const rows = ranked.map((r, i) => [
       i + 1,
-      r.project.teamName,
-      r.project.projectName,
-      r.project.domain,
+      escCsv(r.project.teamName),
+      escCsv(r.project.projectName),
+      escCsv(r.project.domain),
       ...CRITERIA.map((c) => r.scores[c.key]?.toFixed(1) ?? ""),
       r.total.toFixed(2),
       r.project.plagiarismScore + "%",
-      `"${r.verdict}"`,
+      escCsv(r.verdict),
     ]);
 
     const csv = [headers, ...rows].map((r) => r.join(",")).join("\n");
@@ -162,17 +166,17 @@ export default function JudgeDashboard() {
         {showStats && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: "Total Teams", value: totalTeams, icon: Users, color: "purple" },
-              { label: "AI Scored", value: `${aiScoredCount}/${totalTeams}`, icon: Sparkles, color: "blue" },
-              { label: "Avg AI Score", value: avgAIScore.toFixed(1), icon: BarChart3, color: "green" },
-              { label: "With PPT", value: withPPT, icon: LayoutGrid, color: "orange" },
+              { label: "Total Teams", value: totalTeams, icon: Users, colorClass: "text-purple-400" },
+              { label: "AI Scored", value: `${aiScoredCount}/${totalTeams}`, icon: Sparkles, colorClass: "text-blue-400" },
+              { label: "Avg AI Score", value: avgAIScore.toFixed(1), icon: BarChart3, colorClass: "text-green-400" },
+              { label: "With PPT", value: withPPT, icon: LayoutGrid, colorClass: "text-orange-400" },
             ].map((stat) => (
               <div
                 key={stat.label}
                 className="p-4 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm"
               >
                 <div className="flex items-center gap-2 mb-1">
-                  <stat.icon className={`h-4 w-4 text-${stat.color}-400`} />
+                  <stat.icon className={`h-4 w-4 ${stat.colorClass}`} />
                   <span className="text-[11px] text-slate-500 uppercase tracking-wider">{stat.label}</span>
                 </div>
                 <p className="text-2xl font-bold text-white">{stat.value}</p>

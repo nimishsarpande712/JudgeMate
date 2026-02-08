@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +7,7 @@ import { CRITERIA } from "@/lib/scoring";
 import { toast } from "@/hooks/use-toast";
 import { Bot, Loader2, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
+import { scoreWithGroq } from "@/lib/groqScoring";
 
 export default function Demo() {
   const [githubUrl, setGithubUrl] = useState("");
@@ -23,10 +23,12 @@ export default function Demo() {
     setLoading(true);
     setResult(null);
     try {
-      const { data, error } = await supabase.functions.invoke("score-team", {
-        body: { github_url: githubUrl, description, project_name: "Demo Project", domain: "General" },
+      const data = await scoreWithGroq({
+        github_url: githubUrl || undefined,
+        description: description || undefined,
+        project_name: "Demo Project",
+        domain: "General",
       });
-      if (error) throw error;
       setResult(data);
     } catch (err: any) {
       toast({ title: "Scoring failed", description: err.message, variant: "destructive" });
