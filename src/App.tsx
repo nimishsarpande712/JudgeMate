@@ -45,7 +45,7 @@ function LoadingScreen() {
 // Initialize dark mode on app load
 function DarkModeInit() {
   useEffect(() => {
-    const theme = localStorage.getItem("hackjudge_theme");
+    const theme = localStorage.getItem("judgemate_theme");
     if (theme !== "light") {
       document.documentElement.classList.add("dark");
     }

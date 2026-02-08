@@ -84,7 +84,7 @@ export default function JudgeDashboard() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `hackjudge-rankings-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `judgemate-rankings-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
     toast({ title: "CSV exported! 📊" });
@@ -100,7 +100,7 @@ export default function JudgeDashboard() {
               <Zap className="h-5 w-5" />
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-lg font-bold text-white leading-tight">HackJudge AI</h1>
+              <h1 className="text-lg font-bold text-white leading-tight">JudgeMate-AI</h1>
               <p className="text-[10px] text-slate-500 leading-tight">Judge Dashboard</p>
             </div>
             <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-xs">

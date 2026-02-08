@@ -1,4 +1,4 @@
-# HackJudge AI — Deployment Guide
+# JudgeMate-AI — Deployment Guide
 
 AI-powered hackathon judging platform for **Hack With Mumbai 2.0**.
 

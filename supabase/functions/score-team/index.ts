@@ -40,13 +40,13 @@ async function fetchGitHubStats(url: string): Promise<GitHubStats | null> {
 
     const [repoRes, contribRes, commitsRes] = await Promise.all([
       fetch(`https://api.github.com/repos/${owner}/${repoName}`, {
-        headers: { "User-Agent": "HackJudge-AI" },
+        headers: { "User-Agent": "JudgeMate-AI" },
       }),
       fetch(`https://api.github.com/repos/${owner}/${repoName}/contributors?per_page=100`, {
-        headers: { "User-Agent": "HackJudge-AI" },
+        headers: { "User-Agent": "JudgeMate-AI" },
       }),
       fetch(`https://api.github.com/repos/${owner}/${repoName}/commits?per_page=1`, {
-        headers: { "User-Agent": "HackJudge-AI" },
+        headers: { "User-Agent": "JudgeMate-AI" },
       }),
     ]);
 
@@ -71,7 +71,7 @@ async function fetchGitHubStats(url: string): Promise<GitHubStats | null> {
     }
 
     const langRes = await fetch(`https://api.github.com/repos/${owner}/${repoName}/languages`, {
-      headers: { "User-Agent": "HackJudge-AI" },
+      headers: { "User-Agent": "JudgeMate-AI" },
     });
     const languages = langRes.ok ? Object.keys(await langRes.json()) : [];
 

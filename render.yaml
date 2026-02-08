@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: hackjudge-api
+    name: judgemate-api
     runtime: node
     region: oregon
     rootDir: server

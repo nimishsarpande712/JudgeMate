@@ -202,7 +202,7 @@ export default function ProjectSubmission() {
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 text-white">
               <Zap className="h-4 w-4" />
             </div>
-            <span className="font-bold text-white">HackJudge AI</span>
+            <span className="font-bold text-white">JudgeMate-AI</span>
             <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30 text-xs">Student</Badge>
           </div>
           <div className="flex items-center gap-3">

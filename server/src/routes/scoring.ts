@@ -39,7 +39,7 @@ async function fetchGitHubStats(url: string): Promise<GitHubStats | null> {
     const [, owner, repo] = match;
     const repoName = repo.replace(/\.git$/, "");
 
-    const headers = { "User-Agent": "HackJudge-AI" };
+    const headers = { "User-Agent": "JudgeMate-AI" };
 
     const [repoRes, contribRes, commitsRes] = await Promise.all([
       fetch(`https://api.github.com/repos/${owner}/${repoName}`, { headers }),

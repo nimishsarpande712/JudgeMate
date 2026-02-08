@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/⚡-HackJudge_AI-7c3aed?style=for-the-badge&labelColor=1e1b4b" alt="HackJudge AI" />
+  <img src="https://img.shields.io/badge/⚖️-JudgeMate--AI-7c3aed?style=for-the-badge&labelColor=1e1b4b" alt="JudgeMate-AI" />
 </p>
 
-<h1 align="center">HackJudge AI</h1>
+<h1 align="center">JudgeMate-AI</h1>
 
 <p align="center">
   <b>AI-Powered Hackathon Judging Platform</b><br/>
@@ -40,7 +40,7 @@
 
 ## Overview
 
-**HackJudge AI** is a full-stack, AI-powered hackathon judging platform that automates project evaluation across 8 weighted criteria. Judges can review submissions, trigger AI scoring, analyze GitHub repositories, detect plagiarism, and export rankings — all from a single dashboard.
+**JudgeMate-AI** is a full-stack, AI-powered hackathon judging platform that automates project evaluation across 8 weighted criteria. Judges can review submissions, trigger AI scoring, analyze GitHub repositories, detect plagiarism, and export rankings — all from a single dashboard.
 
 Students submit their projects (with GitHub links, descriptions, and PPT files), and the platform automatically analyzes code quality, commit history, and originality using real GitHub API data and large language models.
 
@@ -204,8 +204,8 @@ Students submit their projects (with GitHub links, descriptions, and PPT files),
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/hackjudge-ai.git
-cd hackjudge-ai
+git clone https://github.com/your-username/judgemate-ai.git
+cd judgemate-ai
 ```
 
 ### 2. Install frontend dependencies

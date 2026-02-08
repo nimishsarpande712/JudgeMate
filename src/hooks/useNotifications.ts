@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Notification } from "@/types";
 
-const NOTIF_KEY = "hackjudge_notifications";
+const NOTIF_KEY = "judgemate_notifications";
 
 export function useNotifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);

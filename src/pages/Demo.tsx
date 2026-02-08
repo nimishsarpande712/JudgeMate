@@ -44,7 +44,7 @@ export default function Demo() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <Zap className="h-4 w-4" />
             </div>
-            <span className="font-bold">HackJudge AI — Demo</span>
+            <span className="font-bold">JudgeMate-AI — Demo</span>
           </Link>
           <Link to="/auth"><Button size="sm">Judge Login</Button></Link>
         </div>

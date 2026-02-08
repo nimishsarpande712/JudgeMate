@@ -17,7 +17,7 @@ export default function LandingPage() {
               <Zap className="h-5 w-5" />
             </div>
             <div>
-              <span className="font-bold text-lg text-white">HackJudge AI</span>
+              <span className="font-bold text-lg text-white">JudgeMate-AI</span>
               <p className="text-[10px] text-purple-400 leading-tight flex items-center gap-1">
                 <Sparkles className="h-2.5 w-2.5" /> Fairer Hackathon Judging
               </p>

@@ -66,7 +66,7 @@ export default function Dashboard() {
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url; a.download = "hackjudge-rankings.csv"; a.click();
+    a.href = url; a.download = "judgemate-rankings.csv"; a.click();
     toast({ title: "CSV exported!" });
   };
 
@@ -78,7 +78,7 @@ export default function Dashboard() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <Zap className="h-4 w-4" />
             </div>
-            <h1 className="text-xl font-bold">HackJudge AI</h1>
+            <h1 className="text-xl font-bold">JudgeMate-AI</h1>
             {role && <span className="text-xs bg-muted px-2 py-0.5 rounded-full capitalize">{role}</span>}
           </div>
           <div className="flex items-center gap-2">

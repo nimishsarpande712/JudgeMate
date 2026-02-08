@@ -9,7 +9,7 @@ export default function Index() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <Zap className="h-4 w-4" />
             </div>
-            <span className="font-bold text-lg">HackJudge AI</span>
+            <span className="font-bold text-lg">JudgeMate-AI</span>
           </div>
           <div className="flex gap-2">
             <Link to="/demo"><Button variant="outline" size="sm">Live Demo</Button></Link>

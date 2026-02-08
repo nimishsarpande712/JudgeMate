@@ -1,5 +1,5 @@
 /**
- * API client for HackJudge backend
+ * API client for JudgeMate-AI backend
  * Routes AI calls through the backend proxy instead of exposing API keys in the frontend
  */
 

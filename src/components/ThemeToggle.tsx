@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 export default function ThemeToggle() {
   const [dark, setDark] = useState(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("hackjudge_theme") !== "light";
+      return localStorage.getItem("judgemate_theme") !== "light";
     }
     return true;
   });
@@ -14,10 +14,10 @@ export default function ThemeToggle() {
     const root = document.documentElement;
     if (dark) {
       root.classList.add("dark");
-      localStorage.setItem("hackjudge_theme", "dark");
+      localStorage.setItem("judgemate_theme", "dark");
     } else {
       root.classList.remove("dark");
-      localStorage.setItem("hackjudge_theme", "light");
+      localStorage.setItem("judgemate_theme", "light");
     }
   }, [dark]);
 

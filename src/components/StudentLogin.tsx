@@ -74,7 +74,7 @@ export default function AuthPage() {
               <Zap className="h-6 w-6" />
             </div>
             <div className="text-left">
-              <h1 className="text-2xl font-bold text-white tracking-tight">HackJudge AI</h1>
+              <h1 className="text-2xl font-bold text-white tracking-tight">JudgeMate-AI</h1>
               <p className="text-xs text-purple-300 flex items-center gap-1">
                 <Sparkles className="h-3 w-3" /> Fairer Hackathon Judging
               </p>
@@ -85,7 +85,7 @@ export default function AuthPage() {
         <Card className="border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl shadow-purple-500/10">
           <CardHeader className="text-center space-y-2 pb-4">
             <CardTitle className="text-xl text-white">
-              {isLogin ? "Welcome Back" : "Join HackJudge"}
+              {isLogin ? "Welcome Back" : "Join JudgeMate"}
             </CardTitle>
             <CardDescription className="text-slate-400">
               {isLogin ? "Sign in to continue" : "Create your account to get started"}

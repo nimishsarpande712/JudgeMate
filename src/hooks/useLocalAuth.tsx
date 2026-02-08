@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
 import type { AppUser, UserRole } from "@/types";
+import { supabase } from "@/integrations/supabase/client";
 
 interface LocalAuthContextType {
   user: AppUser | null;
@@ -11,8 +12,8 @@ interface LocalAuthContextType {
 
 const LocalAuthContext = createContext<LocalAuthContextType | undefined>(undefined);
 
-const USERS_KEY = "hackjudge_users";
-const SESSION_KEY = "hackjudge_session";
+const USERS_KEY = "judgemate_users";
+const SESSION_KEY = "judgemate_session";
 
 interface StoredUser extends AppUser {
   password: string;
@@ -66,6 +67,10 @@ export function LocalAuthProvider({ children }: { children: ReactNode }) {
     const { password: _, ...sessionUser } = newUser;
     localStorage.setItem(SESSION_KEY, JSON.stringify(sessionUser));
     setUser(sessionUser);
+
+    // Mirror to Supabase auth (fire-and-forget — enables RLS reads)
+    supabase.auth.signUp({ email: email.toLowerCase(), password }).catch(() => {});
+
     return { error: null };
   };
 
@@ -78,12 +83,16 @@ export function LocalAuthProvider({ children }: { children: ReactNode }) {
     const { password: _, ...sessionUser } = found;
     localStorage.setItem(SESSION_KEY, JSON.stringify(sessionUser));
     setUser(sessionUser);
+
+    // Mirror to Supabase auth (fire-and-forget — enables RLS reads)
+    supabase.auth.signInWithPassword({ email: email.toLowerCase(), password }).catch(() => {});
     return { error: null };
   };
 
   const signOut = () => {
     localStorage.removeItem(SESSION_KEY);
     setUser(null);
+    supabase.auth.signOut().catch(() => {});
   };
 
   return (

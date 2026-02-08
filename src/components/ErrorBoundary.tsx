@@ -33,7 +33,7 @@ class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 p-6">
           <div className="max-w-md w-full text-center space-y-6">
-            <div className="text-6xl">⚡</div>
+            <div className="text-6xl">⚖️</div>
             <h1 className="text-2xl font-bold text-white">Something went wrong</h1>
             <p className="text-slate-400 text-sm">
               {this.state.error?.message || "An unexpected error occurred."}

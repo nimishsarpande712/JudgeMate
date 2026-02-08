@@ -62,7 +62,7 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
 });
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 HackJudge API server running on port ${PORT}`);
+  console.log(`🚀 JudgeMate-AI API server running on port ${PORT}`);
   console.log(`   Allowed origins: ${allowedOrigins.join(", ")}`);
   console.log(`   XAI_API_KEY: ${process.env.XAI_API_KEY ? "✓ configured" : "✗ missing"}`);
   console.log(`   SUPABASE_URL: ${process.env.SUPABASE_URL ? "✓ configured" : "✗ missing"}`);
